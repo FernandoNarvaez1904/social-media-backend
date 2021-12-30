@@ -6,4 +6,5 @@ from social_media_backend.api.schema import schema
 
 urlpatterns = [
     path("graphql/", AsyncGraphQLView.as_view(schema=schema)),
+    "he"
 ]
