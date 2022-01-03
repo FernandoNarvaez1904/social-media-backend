@@ -30,7 +30,10 @@ config = Config()
 config.graceful_timeout = 0  # For speed
 
 while True:
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(serve(app, config, shutdown_trigger=watch_changes))
+    try:
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(serve(app, config, shutdown_trigger=watch_changes))
+    except Exception as e:
+        print(e)
     # It will only run when the shutdown trigger is activated
     restart()
