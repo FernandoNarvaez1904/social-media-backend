@@ -1,8 +1,8 @@
 import strawberry
 import strawberry_django
-from asgiref.sync import sync_to_async
 
 from .types import User
+from .utils import get_current_user_from_info
 
 
 @strawberry.type
@@ -10,10 +10,7 @@ class Query:
 
     @strawberry_django.field
     async def me(self, info) -> User:
-        @sync_to_async()
-        def get_user_in_request() -> User:
-            return info.context.request.user
-        user = await get_user_in_request()
+        user = await get_current_user_from_info(info)
         if not user.is_authenticated:
             raise Exception("User is not logged in")
         return user
