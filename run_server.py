@@ -1,6 +1,7 @@
 import asyncio
 
 from hypercorn.asyncio import serve
+from hypercorn.asyncio.run import restart
 from hypercorn.config import Config
 from watchgod import awatch, DefaultWatcher
 
@@ -26,11 +27,10 @@ async def watch_changes():
 
 # These are the configuration of the app
 config = Config()
-config.worker_class = "uvloop"
+config.graceful_timeout = 0  # For speed
 
 while True:
     loop = asyncio.get_event_loop()
-    loop.set_debug(True)
-    loop.run_until_complete(
-        serve(app, config, shutdown_trigger=watch_changes)
-    )
+    loop.run_until_complete(serve(app, config, shutdown_trigger=watch_changes))
+    # It will only run when the shutdown trigger is activated
+    restart()
