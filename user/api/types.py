@@ -1,4 +1,5 @@
 import strawberry
+import strawberry_django
 from django.contrib.auth import get_user_model
 from strawberry.django import auto
 
@@ -21,3 +22,8 @@ class CreateUserInput:
     email: auto
     first_name: auto
     last_name: auto
+
+
+@strawberry_django.input(get_user_model())
+class DeleteUserInput:
+    password: auto

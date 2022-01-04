@@ -2,7 +2,7 @@ import strawberry
 import strawberry_django
 from asgiref.sync import sync_to_async
 
-from .types import User, CreateUserInput
+from .types import User, CreateUserInput, DeleteUserInput
 from .utils import get_current_user_from_info
 from ..models import User as UserModel
 
@@ -18,9 +18,9 @@ class Mutation:
         return user
 
     @strawberry_django.field
-    async def delete_my_user(self, info, password: str) -> bool:
+    async def delete_my_user(self, info, data: DeleteUserInput) -> bool:
         user: UserModel = await get_current_user_from_info(info)
-        if user.check_password(password):
+        if user.check_password(data.password):
             await sync_to_async(user.delete)()
             return True
         return False
