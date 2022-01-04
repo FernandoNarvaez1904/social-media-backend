@@ -14,6 +14,7 @@ class CustomWatcher(DefaultWatcher):
 
     def __init__(self, root_path: str):
         self.ignored_dirs.add("venv")
+        self.ignored_file_regexes += tuple(["db.sqlite"])
         super().__init__(root_path)
 
 
