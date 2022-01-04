@@ -2,7 +2,7 @@ import strawberry
 import strawberry_django
 from asgiref.sync import sync_to_async
 
-from .types import User, UserInput
+from .types import User, CreateUserInput
 from .utils import get_current_user_from_info
 from ..models import User as UserModel
 
@@ -13,7 +13,7 @@ class Mutation:
     logout = strawberry_django.auth.logout()
 
     @strawberry_django.field
-    async def create_user(self, data: UserInput) -> User:
+    async def create_user(self, data: CreateUserInput) -> User:
         user = await sync_to_async(UserModel.objects.create_user)(**data.__dict__)
         return user
 

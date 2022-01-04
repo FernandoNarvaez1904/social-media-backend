@@ -1,8 +1,6 @@
 import strawberry
-from strawberry.django import auto
 from django.contrib.auth import get_user_model
-
-from user.models import User
+from strawberry.django import auto
 
 
 @strawberry.django.type(get_user_model())
@@ -17,7 +15,7 @@ class User:
 
 
 @strawberry.django.input(get_user_model())
-class UserInput:
+class CreateUserInput:
     username: auto
     password: auto
     email: auto
