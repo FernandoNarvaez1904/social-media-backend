@@ -8,7 +8,6 @@ from strawberry.django import auto
 class User:
     username: auto
     email: auto
-    email: auto
     first_name: auto
     last_name: auto
     last_login: auto
