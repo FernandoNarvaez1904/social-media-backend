@@ -1,6 +1,8 @@
 import functools
+from typing import List
 
 from asgiref.sync import sync_to_async
+from django.db.models import QuerySet
 
 from ..models import User as UserModel
 
@@ -13,6 +15,11 @@ def get_current_user_from_info(info) -> UserModel:
         pass
 
     return user
+
+
+async def get_lazy_query_set_as_list(query_set: QuerySet) -> List:
+    list_coroutine = sync_to_async(list)
+    return await list_coroutine(query_set)
 
 
 def login_required_decorator(func):
