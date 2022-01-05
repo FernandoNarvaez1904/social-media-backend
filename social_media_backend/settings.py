@@ -1,6 +1,8 @@
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+from decouple import config
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -58,15 +60,14 @@ WSGI_APPLICATION = 'social_media_backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-# TODO PUT ME IN DOTENV file
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'social_media',
-        'PASSWORD': 'dontletmedown',
-        'USER': 'postgres',
-        'HOST': 'localhost',
-        'PORT': '5432'
+        'NAME': config("DATABASE_NAME"),
+        'PASSWORD': config("DATABASE_PASSWORD"),
+        'USER': config("DATABASE_USER"),
+        'HOST': config("DATABASE_HOST"),
+        'PORT': config("DATABASE_PORT"),
     }
 }
 
