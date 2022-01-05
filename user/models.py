@@ -66,6 +66,14 @@ class FriendRequest(models.Model):
     sender = models.ForeignKey(User, related_name="sent_friend_requests", on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, related_name="receiver_friend_requests", on_delete=models.CASCADE)
 
+    def save(self, *args, **kwargs):
+        # Prevents for re-adding the same user as friend
+        already_friends = self.sender.friends.filter(pk=self.receiver.id).exists()
+        if already_friends:
+            raise Exception(f"{self.receiver} is already friends with {self.sender}")
+
+        super(FriendRequest, self).save(*args, **kwargs)
+
     def accept(self) -> None:
         if self.status != self.RequestStatus.PENDING:
             raise Exception("Only pending requests can be accepted")
