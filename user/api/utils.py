@@ -1,3 +1,5 @@
+import functools
+
 from asgiref.sync import sync_to_async
 
 from ..models import User as UserModel
@@ -11,3 +13,14 @@ def get_current_user_from_info(info) -> UserModel:
         pass
 
     return user
+
+
+def login_required_decorator(func):
+    @functools.wraps(func)
+    async def wrapper(*args, **kwargs):
+        user = await get_current_user_from_info(kwargs.get("info"))
+        if not user.is_authenticated:
+            raise Exception("User is not logged in")
+        return await func(*args, **kwargs)
+
+    return wrapper
