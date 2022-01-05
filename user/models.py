@@ -49,6 +49,11 @@ class User(AbstractUser):
         f_req.save()
         return True
 
+    def delete_friend_request(self, request_id) -> bool:
+        request = self._get_valid_pending_friend_request(request_id)
+        request.delete()
+        return True
+
 
 class FriendRequest(models.Model):
     class RequestStatus(models.TextChoices):
