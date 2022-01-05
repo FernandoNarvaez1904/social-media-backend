@@ -2,7 +2,8 @@ import strawberry
 import strawberry_django
 from asgiref.sync import sync_to_async
 
-from .types import User, CreateUserInput, DeleteUserInput
+from .input import CreateUserInput, DeleteUserInput
+from .types import User
 from .utils import get_current_user_from_info
 from ..models import User as UserModel
 
