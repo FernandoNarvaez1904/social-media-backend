@@ -3,7 +3,9 @@ from typing import List
 import strawberry
 import strawberry_django
 
-from .utils import get_current_user_from_info, login_required_decorator
+from .types import FriendRequestType, UserType
+from .utils import get_current_user_from_info, login_required_decorator, get_lazy_query_set_as_list
+from ..models import FriendRequest
 
 
 @strawberry.type
