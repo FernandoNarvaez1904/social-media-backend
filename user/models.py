@@ -18,7 +18,6 @@ class User(AbstractUser):
 
     def _get_valid_pending_friend_request(self, request_id) -> "FriendRequest":
         request = self.receiver_friend_requests.filter(pk=request_id)
-        print(request)
 
         if not request:
             raise Exception(f"User has not Friend Request {request_id}")
