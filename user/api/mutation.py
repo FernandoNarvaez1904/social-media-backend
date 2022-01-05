@@ -3,18 +3,18 @@ import strawberry_django
 from asgiref.sync import sync_to_async
 
 from .input import CreateUserInput, DeleteUserInput
-from .types import User
-from .utils import get_current_user_from_info, login_required_decorator
+from .types import UserType
+from .utils import get_current_user_from_info, login_required_decorator, get_lazy_query_set_as_list
 from ..models import User as UserModel
 
 
 @strawberry.type
 class Mutation:
-    login: User = strawberry_django.auth.login()
+    login: UserType = strawberry_django.auth.login()
     logout = strawberry_django.auth.logout()
 
     @strawberry_django.field
-    async def create_user(self, data: CreateUserInput) -> User:
+    async def create_user(self, data: CreateUserInput) -> UserType:
         user = await sync_to_async(UserModel.objects.create_user)(**data.__dict__)
         return user
 
@@ -26,3 +26,13 @@ class Mutation:
             await sync_to_async(user.delete)()
             return True
         return False
+
+    @strawberry_django.field
+    @login_required_decorator
+    async def send_friend_request(self, info, user_id: str) -> bool:
+        user: UserModel = await get_current_user_from_info(info)
+        receiver_user = await get_lazy_query_set_as_list(UserModel.objects.filter(pk=user_id))
+        if not receiver_user:
+            raise Exception(f"User with id {user_id} does not exist")
+        await sync_to_async(user.send_friend_request)(user_id)
+        return True
