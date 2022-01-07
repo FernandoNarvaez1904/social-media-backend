@@ -21,3 +21,8 @@ class DeleteUserInput:
 @strawberry.input
 class SendFriendRequestInput:
     userId: str
+
+
+@strawberry.input
+class AcceptFriendRequestInput:
+    requestId: strawberry.scalars.ID
