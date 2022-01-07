@@ -1,10 +1,11 @@
 import strawberry
 import strawberry_django
 from asgiref.sync import sync_to_async
+from strawberry.types import Info
 
 from .input import CreateUserInput, DeleteUserInput, SendFriendRequestInput, AcceptFriendRequestInput
 from .types import UserType
-from .utils import get_current_user_from_info, login_required_decorator, get_lazy_query_set_as_list
+from .utils import login_required_decorator, get_lazy_query_set_as_list
 from ..models import User
 
 
@@ -14,14 +15,14 @@ class Mutation:
     logout = strawberry_django.auth.logout()
 
     @strawberry_django.field
-    async def create_user(self, data: CreateUserInput) -> UserType:
-        user = await sync_to_async(User.objects.create_user)(**data.__dict__)
+    async def create_user(self, info: Info, data: CreateUserInput) -> UserType:
+        user = info.variable_values.get("user")
         return user
 
     @strawberry_django.field
     @login_required_decorator
-    async def delete_my_user(self, info, data: DeleteUserInput) -> bool:
-        user: User = await get_current_user_from_info(info)
+    async def delete_my_user(self, info: Info, data: DeleteUserInput) -> bool:
+        user = info.variable_values.get("user")
         if user.check_password(data.password):
             await sync_to_async(user.delete)()
             return True
@@ -29,8 +30,8 @@ class Mutation:
 
     @strawberry_django.field
     @login_required_decorator
-    async def send_friend_request(self, info, data: SendFriendRequestInput) -> bool:
-        user: User = await get_current_user_from_info(info)
+    async def send_friend_request(self, info: Info, data: SendFriendRequestInput) -> bool:
+        user = info.variable_values.get("user")
         receiver_user = await get_lazy_query_set_as_list(User.objects.filter(pk=data.user_id))
         if not receiver_user:
             raise Exception(f"User with id {data.user_id} does not exist")
@@ -39,7 +40,7 @@ class Mutation:
 
     @strawberry_django.field
     @login_required_decorator
-    async def accept_friend_request(self, info, data: AcceptFriendRequestInput) -> bool:
-        user: User = await get_current_user_from_info(info)
+    async def accept_friend_request(self, info: Info, data: AcceptFriendRequestInput) -> bool:
+        user = info.variable_values.get("user")
         await sync_to_async(user.accept_friend_request)(data.requestId)
         return True

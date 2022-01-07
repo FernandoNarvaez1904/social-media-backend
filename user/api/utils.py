@@ -13,7 +13,6 @@ def get_current_user_from_info(info) -> UserModel:
     # It forces the evaluation of the lazy model object
     if isinstance(user, UserModel):
         pass
-
     return user
 
 
@@ -28,6 +27,7 @@ def login_required_decorator(func):
         user = await get_current_user_from_info(kwargs.get("info"))
         if not user.is_authenticated:
             raise Exception("User is not logged in")
+        kwargs["info"].variable_values["user"] = user
         return await func(*args, **kwargs)
 
     return wrapper
