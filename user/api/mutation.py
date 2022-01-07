@@ -16,7 +16,7 @@ class Mutation:
 
     @strawberry_django.field
     async def create_user(self, info: Info, data: CreateUserInput) -> UserType:
-        user = info.variable_values.get("user")
+        user = await sync_to_async(User.objects.create_user)(**data.__dict__)
         return user
 
     @strawberry_django.field
