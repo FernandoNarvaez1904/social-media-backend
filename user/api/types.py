@@ -10,7 +10,7 @@ from ..models import FriendRequest
 
 @strawberry.django.type(get_user_model())
 class UserType:
-    id: auto
+    id: strawberry.scalars.ID
     username: auto
     email: auto
     first_name: auto
@@ -22,7 +22,7 @@ class UserType:
 
 @strawberry.django.type(FriendRequest)
 class FriendRequestType:
-    id: auto
+    id: strawberry.scalars.ID
     created_at: auto
     status: auto
     sender: UserType

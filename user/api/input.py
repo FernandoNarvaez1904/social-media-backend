@@ -20,7 +20,7 @@ class DeleteUserInput:
 
 @strawberry.input
 class SendFriendRequestInput:
-    userId: str
+    userId: strawberry.scalars.ID
 
 
 @strawberry.input
