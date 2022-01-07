@@ -60,8 +60,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'social_media_backend.wsgi.application'
 
 # Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-DATABASES = {}
+DATABASES = {}  #
 if URL := config("DATABASE_URL", ""):
     DATABASES["default"] = dj_database_url.parse(URL)
 else:
