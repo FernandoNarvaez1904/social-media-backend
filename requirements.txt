@@ -12,6 +12,7 @@ clikit==0.6.2
 crashtest==0.3.1
 cryptography==3.4.8
 distlib==0.3.2
+dj-database-url==0.5.0
 Django==4.0
 filelock==3.0.12
 graphql-core==3.1.7
