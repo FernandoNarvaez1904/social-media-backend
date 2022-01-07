@@ -2,7 +2,7 @@ import strawberry
 import strawberry_django
 from asgiref.sync import sync_to_async
 
-from .input import CreateUserInput, DeleteUserInput, SendFriendRequestInput
+from .input import CreateUserInput, DeleteUserInput, SendFriendRequestInput, AcceptFriendRequestInput
 from .types import UserType
 from .utils import get_current_user_from_info, login_required_decorator, get_lazy_query_set_as_list
 from ..models import User
@@ -35,4 +35,11 @@ class Mutation:
         if not receiver_user:
             raise Exception(f"User with id {data.user_id} does not exist")
         await sync_to_async(user.send_friend_request)(data.user_id)
+        return True
+
+    @strawberry_django.field
+    @login_required_decorator
+    async def accept_friend_request(self, info, data: AcceptFriendRequestInput) -> bool:
+        user: User = await get_current_user_from_info(info)
+        await sync_to_async(user.accept_friend_request)(data.requestId)
         return True
