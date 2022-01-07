@@ -26,3 +26,8 @@ class SendFriendRequestInput:
 @strawberry.input
 class AcceptFriendRequestInput:
     requestId: strawberry.scalars.ID
+
+
+@strawberry.input
+class RejectFriendRequestInput:
+    requestId: strawberry.scalars.ID
