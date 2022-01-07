@@ -42,10 +42,11 @@ class User(AbstractUser):
         user = self.__class__.objects.filter(pk=user_id)
         if not user:
             raise Exception("User does not exist")
-        if user[0].id == self.id:
+        elif user[0].id == self.id:
             raise Exception("Cannot sent friend request to itself")
+        elif friend := self.friends.filter(pk=user_id):
+            raise Exception(f"{friend[0]} is already your friend")
         f_req = FriendRequest.objects.create(sender=self, receiver=user[0])
-        f_req.save()
         return True
 
     def delete_friend_request(self, request_id) -> bool:
@@ -65,19 +66,17 @@ class FriendRequest(models.Model):
     sender = models.ForeignKey(User, related_name="sent_friend_requests", on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, related_name="receiver_friend_requests", on_delete=models.CASCADE)
 
-    def save(self, *args, **kwargs):
-        # Prevents for re-adding the same user as friend
-        already_friends = self.sender.friends.filter(pk=self.receiver.id).exists()
-        if already_friends:
-            raise Exception(f"{self.receiver} is already friends with {self.sender}")
-
-        super(FriendRequest, self).save(*args, **kwargs)
+    def check_already_friends(self):
+        return self.sender.friends.filter(pk=self.receiver.id).exists()
 
     def accept(self) -> None:
         if self.status != self.RequestStatus.PENDING:
             raise Exception("Only pending requests can be accepted")
 
         receiver_user = self.receiver
+
+        if self.check_already_friends():
+            raise Exception(f"{self.receiver} is already friends with {self.sender}")
 
         # Request has to been approved to change in the user model
         list_of_approved_request = receiver_user.meta_data["approved_friend_request"]
@@ -91,7 +90,7 @@ class FriendRequest(models.Model):
 
         # Updating Status
         self.status = self.RequestStatus.ACCEPTED
-        self.save()  # Adding sender to reciever friend list
+        self.save()
 
     def reject(self) -> None:
         receiver_user = self.receiver
