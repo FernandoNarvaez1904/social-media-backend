@@ -36,6 +36,8 @@ class User(AbstractUser):
 
     def reject_friend_request(self, request_id) -> None:
         request = self._get_valid_pending_friend_request(request_id)
+        self.meta_data["approved_friend_request"].append(f"{request_id}")
+        self.save()
         request.reject()
 
     def send_friend_request(self, user_id) -> bool:
