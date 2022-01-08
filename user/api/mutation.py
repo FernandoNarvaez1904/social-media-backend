@@ -33,10 +33,10 @@ class Mutation:
     @login_required_decorator
     async def send_friend_request(self, info: Info, data: SendFriendRequestInput) -> bool:
         user: User = info.variable_values.get("user")
-        receiver_user = await get_lazy_query_set_as_list(User.objects.filter(pk=data.user_id))
+        receiver_user = await get_lazy_query_set_as_list(User.objects.filter(pk=data.userId))
         if not receiver_user:
-            raise Exception(f"User with id {data.user_id} does not exist")
-        await sync_to_async(user.send_friend_request)(data.user_id)
+            raise Exception(f"User with id {data.userId} does not exist")
+        await sync_to_async(user.send_friend_request)(data.userId)
         return True
 
     @strawberry_django.field
