@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn -k uvicorn.workers.UvicornWorker --port $PORT social_media_backend:application
+web: gunicorn -k uvicorn.workers.UvicornWorker -b $PORT social_media_backend:application
