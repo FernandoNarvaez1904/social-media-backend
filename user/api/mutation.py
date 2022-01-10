@@ -4,7 +4,7 @@ from asgiref.sync import sync_to_async
 from strawberry.types import Info
 
 from .input import CreateUserInput, DeleteUserInput, SendFriendRequestInput, AcceptFriendRequestInput, \
-    RejectFriendRequestInput
+    RejectFriendRequestInput, UpdateUserInput
 from .types import UserType
 from .utils import login_required_decorator, get_lazy_query_set_as_list
 from ..models import User
@@ -18,6 +18,14 @@ class Mutation:
     @strawberry_django.field
     async def create_user(self, info: Info, data: CreateUserInput) -> UserType:
         user = await sync_to_async(User.objects.create_user)(**data.__dict__)
+        return user
+
+    @strawberry_django.field
+    @login_required_decorator
+    async def update_user(self, info: Info, data: UpdateUserInput) -> UserType:
+        user = info.variable_values.get("user")
+        [user.__setattr__(key, val) if val else "" for key, val in data.__dict__.items()]
+        await sync_to_async(user.save)()
         return user
 
     @strawberry_django.field
