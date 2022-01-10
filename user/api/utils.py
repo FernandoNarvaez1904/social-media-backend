@@ -1,5 +1,5 @@
 import functools
-from typing import List
+from typing import List, Callable
 
 from asgiref.sync import sync_to_async
 from django.db.models import QuerySet
@@ -23,7 +23,7 @@ async def get_lazy_query_set_as_list(query_set: QuerySet) -> List:
 
 def login_required_decorator(func):
     @functools.wraps(func)
-    async def wrapper(*args, **kwargs):
+    async def wrapper(*args, **kwargs) -> Callable:
         user = await get_current_user_from_info(kwargs.get("info"))
         if not user.is_authenticated:
             raise Exception("User is not logged in")
