@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 import strawberry
 import strawberry_django
@@ -40,3 +40,8 @@ class AcceptFriendRequestInput:
 @strawberry.input
 class RejectFriendRequestInput:
     requestId: strawberry.scalars.ID
+
+
+@strawberry.input
+class RemoveFriendsInput:
+    friends_id: List[strawberry.scalars.ID]
