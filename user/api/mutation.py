@@ -3,10 +3,11 @@ import strawberry_django
 from asgiref.sync import sync_to_async
 from strawberry.types import Info
 
+from social_media_backend.api.utils import get_lazy_query_set_as_list
 from .input import CreateUserInput, DeleteUserInput, SendFriendRequestInput, AcceptFriendRequestInput, \
     RejectFriendRequestInput, UpdateUserInput, RemoveFriendsInput
 from .types import UserType
-from .utils import login_required_decorator, get_lazy_query_set_as_list
+from .utils import login_required_decorator
 from ..models import User
 
 

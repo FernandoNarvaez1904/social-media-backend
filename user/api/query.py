@@ -4,9 +4,10 @@ import strawberry
 import strawberry_django
 from strawberry.types import Info
 
+from social_media_backend.api.utils import get_lazy_query_set_as_list
 from .filter import UserFilter
 from .types import FriendRequestType, UserType
-from .utils import login_required_decorator, get_lazy_query_set_as_list
+from .utils import login_required_decorator
 from ..models import FriendRequest
 
 
