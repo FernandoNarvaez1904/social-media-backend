@@ -1,3 +1,5 @@
+from typing import Optional
+
 import strawberry
 import strawberry_django
 from django.contrib.auth import get_user_model
@@ -11,6 +13,13 @@ class CreateUserInput:
     email: auto
     first_name: auto
     last_name: auto
+
+
+@strawberry_django.input(get_user_model())
+class UpdateUserInput:
+    first_name: Optional[str]
+    last_name: Optional[str]
+    last_name: Optional[str]
 
 
 @strawberry_django.input(get_user_model())
