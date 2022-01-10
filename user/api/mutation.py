@@ -4,7 +4,7 @@ from asgiref.sync import sync_to_async
 from strawberry.types import Info
 
 from .input import CreateUserInput, DeleteUserInput, SendFriendRequestInput, AcceptFriendRequestInput, \
-    RejectFriendRequestInput, UpdateUserInput
+    RejectFriendRequestInput, UpdateUserInput, RemoveFriendsInput
 from .types import UserType
 from .utils import login_required_decorator, get_lazy_query_set_as_list
 from ..models import User
@@ -53,6 +53,16 @@ class Mutation:
         user: User = info.variable_values.get("user")
         await sync_to_async(user.accept_friend_request)(data.requestId)
         return True
+
+    @strawberry_django.field
+    @login_required_decorator
+    async def remove_friends(self, info: Info, data: RemoveFriendsInput) -> bool:
+        user: User = info.variable_values.get("user")
+        friends = await get_lazy_query_set_as_list(user.friends.filter(pk__in=data.friends_id))
+        if friends:
+            [await sync_to_async(user.friends.remove)(f) for f in friends]
+            return True
+        return False
 
     @strawberry_django.field
     @login_required_decorator
