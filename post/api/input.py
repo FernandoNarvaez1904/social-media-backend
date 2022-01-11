@@ -20,6 +20,6 @@ class DeletePostInput:
 
 
 @strawberry_django.input(Comment)
-class :
+class CreateCommentInput:
     description: auto
     post_id: strawberry.scalars.ID
