@@ -11,3 +11,8 @@ from post.models import Post
 class CreatePostInput:
     description: auto
     publication_date: Optional[DateTime]
+
+
+@strawberry_django.input(Post)
+class DeletePostInput:
+    id: auto
