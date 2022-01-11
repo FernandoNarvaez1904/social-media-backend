@@ -1,7 +1,8 @@
 import strawberry.django
 from strawberry.django import auto
 
-from post.models import Post
+from post.models import Post, Comment
+from user.api.types import UserType
 
 
 @strawberry.django.type(Post)
