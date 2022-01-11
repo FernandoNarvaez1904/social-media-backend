@@ -11,3 +11,11 @@ class PostType:
     description: auto
     publication_date: auto
     creation_date: auto
+
+
+@strawberry.django.type(Comment)
+class CommentType:
+    id: strawberry.scalars.ID
+    description: auto
+    post: PostType
+    user: UserType
