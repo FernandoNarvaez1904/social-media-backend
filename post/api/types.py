@@ -1,3 +1,5 @@
+from typing import List
+
 import strawberry.django
 from strawberry.django import auto
 
@@ -11,6 +13,7 @@ class PostType:
     description: auto
     publication_date: auto
     creation_date: auto
+    comments: List["CommentType"]
 
 
 @strawberry.django.type(Comment)
