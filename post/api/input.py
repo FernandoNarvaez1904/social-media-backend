@@ -1,10 +1,11 @@
 from typing import Optional
 
+import strawberry
 import strawberry_django
 from strawberry.django import auto
 from strawberry.schema.types.base_scalars import DateTime
 
-from post.models import Post
+from post.models import Post, Comment
 
 
 @strawberry_django.input(Post)
@@ -16,3 +17,9 @@ class CreatePostInput:
 @strawberry_django.input(Post)
 class DeletePostInput:
     id: auto
+
+
+@strawberry_django.input(Comment)
+class :
+    description: auto
+    post_id: strawberry.scalars.ID
