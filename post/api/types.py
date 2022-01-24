@@ -14,6 +14,7 @@ class PostType:
     publication_date: auto
     creation_date: auto
     comments: List["CommentType"]
+    user: UserType
 
 
 @strawberry.django.type(Comment)
