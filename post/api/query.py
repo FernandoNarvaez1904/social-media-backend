@@ -4,6 +4,7 @@ import strawberry
 from strawberry.types import Info
 
 from post.api.types import PostType
+from post.models import Post
 from social_media_backend.api.utils import get_lazy_query_set_as_list
 from user.api.utils import login_required_decorator
 
@@ -17,3 +18,9 @@ class Query:
         user = info.variable_values.get("user")
         post = await get_lazy_query_set_as_list(user.my_posts.all())
         return post
+
+    @strawberry.field
+    @login_required_decorator
+    async def all_post(self, info: Info) -> List[PostType]:  # Info is needed for login_required
+        posts = await get_lazy_query_set_as_list(Post.objects.all())
+        return posts
