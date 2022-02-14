@@ -1,47 +1,46 @@
 from typing import Optional, List
 
-import strawberry
-import strawberry_django
 from django.contrib.auth import get_user_model
-from strawberry_django import auto
+from strawberry.scalars import ID
+from strawberry_django_plus import gql
 
 
-@strawberry_django.input(get_user_model())
+@gql.django.input(get_user_model())
 class CreateUserInput:
-    username: auto
-    password: auto
-    email: auto
-    first_name: auto
-    last_name: auto
+    username: gql.auto
+    password: gql.auto
+    email: gql.auto
+    first_name: gql.auto
+    last_name: gql.auto
 
 
-@strawberry_django.input(get_user_model())
+@gql.django.input(get_user_model())
 class UpdateUserInput:
     first_name: Optional[str]
     last_name: Optional[str]
     last_name: Optional[str]
 
 
-@strawberry_django.input(get_user_model())
+@gql.django.input(get_user_model())
 class DeleteUserInput:
-    password: auto
+    password: gql.auto
 
 
-@strawberry.input
+@gql.django.input
 class SendFriendRequestInput:
-    userId: strawberry.scalars.ID
+    userId: ID
 
 
-@strawberry.input
+@gql.django.input
 class AcceptFriendRequestInput:
-    requestId: strawberry.scalars.ID
+    requestId: ID
 
 
-@strawberry.input
+@gql.django.input
 class RejectFriendRequestInput:
-    requestId: strawberry.scalars.ID
+    requestId: ID
 
 
-@strawberry.input
+@gql.django.input
 class RemoveFriendsInput:
-    friends_id: List[strawberry.scalars.ID]
+    friends_id: List[ID]

@@ -1,25 +1,25 @@
 from typing import List
 
-import strawberry.django
-from strawberry.django import auto
+from strawberry.scalars import ID
+from strawberry_django_plus import gql
 
 from post.models import Post, Comment
 from user.api.types import UserType
 
 
-@strawberry.django.type(Post)
+@gql.django.type(Post)
 class PostType:
-    id: strawberry.scalars.ID
-    description: auto
-    publication_date: auto
-    creation_date: auto
+    id: ID
+    description: gql.auto
+    publication_date: gql.auto
+    creation_date: gql.auto
     comments: List["CommentType"]
     user: UserType
 
 
-@strawberry.django.type(Comment)
+@gql.django.type(Comment)
 class CommentType:
-    id: strawberry.scalars.ID
-    description: auto
+    id: ID
+    description: gql.auto
     post: PostType
     user: UserType

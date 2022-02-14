@@ -1,7 +1,6 @@
-import strawberry
-import strawberry_django
 from asgiref.sync import sync_to_async
 from strawberry.types import Info
+from strawberry_django_plus import gql
 
 from social_media_backend.api.utils import get_lazy_query_set_as_list
 from .input import CreateUserInput, DeleteUserInput, SendFriendRequestInput, AcceptFriendRequestInput, \
@@ -11,17 +10,17 @@ from .utils import login_required_decorator
 from ..models import User
 
 
-@strawberry.type
+@gql.type
 class Mutation:
-    login: UserType = strawberry_django.auth.login()
-    logout = strawberry_django.auth.logout()
+    login: UserType = gql.django.auth.login()
+    logout = gql.django.auth.logout()
 
-    @strawberry_django.field
+    @gql.django.field
     async def create_user(self, info: Info, data: CreateUserInput) -> UserType:
         user = await sync_to_async(User.objects.create_user)(**data.__dict__)
         return user
 
-    @strawberry_django.field
+    @gql.django.field
     @login_required_decorator
     async def update_user(self, info: Info, data: UpdateUserInput) -> UserType:
         user = info.variable_values.get("user")
@@ -29,7 +28,7 @@ class Mutation:
         await sync_to_async(user.save)()
         return user
 
-    @strawberry_django.field
+    @gql.django.field
     @login_required_decorator
     async def delete_my_user(self, info: Info, data: DeleteUserInput) -> bool:
         user: User = info.variable_values.get("user")
@@ -38,7 +37,7 @@ class Mutation:
             return True
         return False
 
-    @strawberry_django.field
+    @gql.django.field
     @login_required_decorator
     async def send_friend_request(self, info: Info, data: SendFriendRequestInput) -> bool:
         user: User = info.variable_values.get("user")
@@ -48,14 +47,14 @@ class Mutation:
         await sync_to_async(user.send_friend_request)(data.userId)
         return True
 
-    @strawberry_django.field
+    @gql.django.field
     @login_required_decorator
     async def accept_friend_request(self, info: Info, data: AcceptFriendRequestInput) -> bool:
         user: User = info.variable_values.get("user")
         await sync_to_async(user.accept_friend_request)(data.requestId)
         return True
 
-    @strawberry_django.field
+    @gql.django.field
     @login_required_decorator
     async def remove_friends(self, info: Info, data: RemoveFriendsInput) -> bool:
         user: User = info.variable_values.get("user")
@@ -65,7 +64,7 @@ class Mutation:
             return True
         return False
 
-    @strawberry_django.field
+    @gql.django.field
     @login_required_decorator
     async def reject_friend_request(self, info: Info, data: RejectFriendRequestInput) -> bool:
         user: User = info.variable_values.get("user")

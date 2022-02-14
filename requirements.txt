@@ -8,3 +8,4 @@ python-decouple==3.6
 psycopg2-binary==2.9.3
 uvicorn==0.17.4
 mypy==0.931
+strawberry-django-plus==0.8.3

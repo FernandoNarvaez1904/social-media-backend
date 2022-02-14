@@ -1,28 +1,28 @@
 from typing import List
 
-import strawberry
 from django.contrib.auth import get_user_model
-from strawberry.django import auto
+from strawberry import ID
+from strawberry_django_plus import gql
 
 from .filter import UserFilter
 from ..models import FriendRequest
 
 
-@strawberry.django.type(get_user_model())
+@gql.django.type(get_user_model())
 class UserType:
-    id: strawberry.scalars.ID
-    username: auto
-    email: auto
-    first_name: auto
-    last_name: auto
-    last_login: auto
-    is_active: auto
-    friends: List["UserType"] = strawberry.django.field(filters=UserFilter)
+    id: ID
+    username: gql.auto
+    email: gql.auto
+    first_name: gql.auto
+    last_name: gql.auto
+    last_login: gql.auto
+    is_active: gql.auto
+    friends: List["UserType"] = gql.django.field(filters=UserFilter)
 
 
-@strawberry.django.type(FriendRequest)
+@gql.django.type(FriendRequest)
 class FriendRequestType:
-    id: strawberry.scalars.ID
-    created_at: auto
-    status: auto
+    id: ID
+    created_at: gql.auto
+    status: gql.auto
     sender: UserType

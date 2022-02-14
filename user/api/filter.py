@@ -1,13 +1,12 @@
-import strawberry_django
 from django.contrib.auth import get_user_model
-from strawberry_django import auto
+from strawberry_django_plus import gql
 
 
-@strawberry_django.filter(get_user_model(), lookups=True)
+@gql.django.filter(get_user_model(), lookups=True)
 class UserFilter:
-    username: auto
-    email: auto
-    first_name: auto
-    last_name: auto
-    last_login: auto
-    is_active: auto
+    username: gql.auto
+    email: gql.auto
+    first_name: gql.auto
+    last_name: gql.auto
+    last_login: gql.auto
+    is_active: gql.auto
