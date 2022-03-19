@@ -26,21 +26,21 @@ class DeleteUserInput:
     password: gql.auto
 
 
-@gql.django.input
+@gql.input
 class SendFriendRequestInput:
     userId: ID
 
 
-@gql.django.input
+@gql.input
 class AcceptFriendRequestInput:
     requestId: ID
 
 
-@gql.django.input
+@gql.input
 class RejectFriendRequestInput:
     requestId: ID
 
 
-@gql.django.input
+@gql.input
 class RemoveFriendsInput:
     friends_id: List[ID]
