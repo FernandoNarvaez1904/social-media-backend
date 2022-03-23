@@ -28,7 +28,7 @@ INSTALLED_APPS = [
 
     # My apps
     'user',
-    "messages",
+    "messages_social",
 ]
 
 MIDDLEWARE = [
