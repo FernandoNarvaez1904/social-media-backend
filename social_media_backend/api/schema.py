@@ -1,8 +1,9 @@
 import strawberry
-from strawberry.extensions import ParserCache, ValidationCache
 from strawberry_django_plus.optimizer import DjangoOptimizerExtension
 
 from social_media_backend.api.mutation import Mutation
 from social_media_backend.api.query import Query
+from social_media_backend.api.subscription import Subscription
 
-schema = strawberry.Schema(query=Query,  mutation=Mutation, extensions=[ParserCache(), ValidationCache(), DjangoOptimizerExtension])
+schema = strawberry.Schema(query=Query, mutation=Mutation, subscription=Subscription,
+                           extensions=[DjangoOptimizerExtension])

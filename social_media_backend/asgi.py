@@ -1,16 +1,26 @@
-"""
-ASGI config for social_media_backend project.
-
-It exposes the ASGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/4.0/howto/deployment/asgi/
-"""
-
 import os
 
 from django.core.asgi import get_asgi_application
+from starlette.websockets import WebSocketDisconnect
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'social_media_backend.settings')
+from .api.custom_graphql_config import MyGraphQL
 
-application = get_asgi_application()
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "social_media_backend.settings")
+
+django_application = get_asgi_application()
+
+
+async def application(scope, receive, send):
+    if scope["type"] == "http":
+        await django_application(scope, receive, send)
+    elif scope["type"] == "websocket":
+        try:
+            from .api.schema import schema
+
+            graphql_app = MyGraphQL(schema, keep_alive=True, keep_alive_interval=5)
+
+            await graphql_app(scope, receive, send)
+        except WebSocketDisconnect:
+            pass
+    else:
+        raise NotImplementedError(f"Unknown scope type {scope['type']}")

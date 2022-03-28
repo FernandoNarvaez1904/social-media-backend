@@ -8,3 +8,5 @@ uvicorn==0.17.6
 mypy==0.941
 psycopg2-binary==2.9.3
 strawberry-django-plus==1.4
+broadcaster==0.2.0
+starlette==0.19.0

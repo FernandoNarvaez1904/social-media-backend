@@ -1,3 +1,5 @@
+from ctypes import Union
+
 from asgiref.sync import sync_to_async
 from strawberry.types import Info
 from strawberry_django_plus import gql
@@ -20,6 +22,11 @@ class Mutation:
         if not is_friend:
             raise Exception("Receiver is not your friend")
 
-        messages = await sync_to_async(Messages.objects.create)(receiver_id=data.receiver, sender=user,
-                                                                content=data.content)
+        # The type is only messages but I have to add MessagesType, because of the return of the function.
+        messages: Union(Messages, MessagesType) = await sync_to_async(Messages.objects.create)(
+            receiver_id=data.receiver, sender=user,
+            content=data.content)
+
+        await info.context.broadcast.publish(channel=f"chatroom-{data.receiver}", message=messages.id)
+
         return messages
