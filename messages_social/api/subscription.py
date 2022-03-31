@@ -1,4 +1,5 @@
 import strawberry
+from asgiref.sync import sync_to_async
 from strawberry.types import Info
 from strawberry_django_plus import gql
 
@@ -17,4 +18,4 @@ class Subscription:
         user: User = info.variable_values.get("user")
         async with info.context.broadcast.subscribe(channel=f"chatroom-{user.id}") as subscriber:
             async for event in subscriber:
-                yield Messages.objects.get(pk=event.message)
+                yield sync_to_async(Messages.objects.get)(pk=event.message)

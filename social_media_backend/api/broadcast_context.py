@@ -1,6 +1,8 @@
 from dataclasses import dataclass
+from typing import Union
 
 from broadcaster import Broadcast
+from django.http import HttpRequest, HttpResponse
 from starlette.requests import Request
 from starlette.responses import Response
 
@@ -21,5 +23,5 @@ async def get_broadcast():
 @dataclass
 class BroadcastContext:
     broadcast: Broadcast
-    request: Request
-    response: Response
+    request: Union[Request, HttpRequest]
+    response: Union[Response, HttpResponse]

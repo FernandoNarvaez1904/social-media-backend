@@ -1,8 +1,8 @@
 from django.urls import path
-from strawberry.django.views import AsyncGraphQLView
 
+from social_media_backend.api.custom_graphql_config import AsyncGraphQLViewWithBroadcast
 from social_media_backend.api.schema import schema
 
 urlpatterns = [
-    path("graphql/", AsyncGraphQLView.as_view(schema=schema)),
+    path("graphql/", AsyncGraphQLViewWithBroadcast.as_view(schema=schema)),
 ]

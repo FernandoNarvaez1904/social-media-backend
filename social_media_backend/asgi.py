@@ -1,9 +1,10 @@
 import os
 
+from channels.auth import AuthMiddlewareStack
 from django.core.asgi import get_asgi_application
 from starlette.websockets import WebSocketDisconnect
 
-from .api.custom_graphql_config import MyGraphQL
+from .api.custom_graphql_config import WebSocketGraphQL
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "social_media_backend.settings")
 
@@ -17,7 +18,7 @@ async def application(scope, receive, send):
         try:
             from .api.schema import schema
 
-            graphql_app = MyGraphQL(schema, keep_alive=True, keep_alive_interval=5)
+            graphql_app = AuthMiddlewareStack(WebSocketGraphQL(schema, keep_alive=True, keep_alive_interval=5))
 
             await graphql_app(scope, receive, send)
         except WebSocketDisconnect:
