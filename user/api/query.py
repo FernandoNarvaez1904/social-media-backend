@@ -1,12 +1,13 @@
 from typing import List
 
 from strawberry.types import Info
+from strawberry_django_jwt.decorators import login_required
 from strawberry_django_plus import gql
 
 from social_media_backend.api.utils import get_lazy_query_set_as_list
 from .filter import UserFilter
 from .types import FriendRequestType, UserType
-from .utils import login_required_decorator, get_current_user_from_info
+from .utils import get_current_user_from_info
 from ..models import FriendRequest
 
 
@@ -20,15 +21,15 @@ class Query:
         return user.is_authenticated
 
     @gql.django.field
-    @login_required_decorator
+    @login_required
     async def me(self, info: Info) -> UserType:
-        user = info.variable_values.get("user")
+        user = await get_current_user_from_info(info)
         return user
 
     @gql.django.field
-    @login_required_decorator
+    @login_required
     async def pending_friend_request(self, info: Info) -> List[FriendRequestType]:
-        user = info.variable_values.get("user")
+        user = await get_current_user_from_info(info)
         request_list = await get_lazy_query_set_as_list(
             user.receiver_friend_requests.filter(status=FriendRequest.RequestStatus.PENDING))
         return request_list

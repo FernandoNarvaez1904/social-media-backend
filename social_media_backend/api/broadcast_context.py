@@ -1,10 +1,7 @@
 from dataclasses import dataclass
-from typing import Union
 
 from broadcaster import Broadcast
-from django.http import HttpRequest, HttpResponse
-from starlette.requests import Request
-from starlette.responses import Response
+from strawberry.django.context import StrawberryDjangoContext
 
 broadcast = None
 
@@ -21,7 +18,5 @@ async def get_broadcast():
 
 
 @dataclass
-class BroadcastContext:
+class BroadcastContext(StrawberryDjangoContext):
     broadcast: Broadcast
-    request: Union[Request, HttpRequest]
-    response: Union[Response, HttpResponse]

@@ -11,7 +11,7 @@ from .broadcast_context import BroadcastContext, get_broadcast
 
 
 class WebSocketGraphQL(GraphQL):
-    async def get_context(self, request: typing.Union[Request, WebSocket],
+    async def get_context(self, request: typing.Union[Request, WebSocket, HttpRequest],
                           response: typing.Optional[Response] = None, ) -> typing.Optional[typing.Any]:
         broadcast = await get_broadcast()
 

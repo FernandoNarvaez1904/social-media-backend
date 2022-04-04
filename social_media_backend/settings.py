@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'strawberry_django_jwt.refresh_token',
 
     "channels",
     # My apps
@@ -41,6 +42,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+AUTHENTICATION_BACKENDS = [
+    'strawberry_django_jwt.backends.JSONWebTokenBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 ROOT_URLCONF = 'social_media_backend.urls'
@@ -125,3 +131,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_ALLOW_ALL = DEBUG
 
 ASGI_APPLICATION = 'social_media_backend.asgi.application'
+
+GRAPHQL_JWT = {
+    "JWT_AUTHENTICATE_INTROSPECTION": False
+}
