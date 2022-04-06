@@ -18,6 +18,12 @@ async def application(scope, receive, send):
         try:
             from .api.schema import schema
 
+            query_string = str(scope.get("query_string"))[2:-1]
+            param_list = [i.split("=") for i in query_string.split("&")]
+            params_dict = {str(i[0]): str(i[1]) for i in param_list}
+
+            scope["params_dict"] = params_dict
+
             graphql_app = AuthMiddlewareStack(WebSocketGraphQL(schema, keep_alive=True, keep_alive_interval=5))
 
             await graphql_app(scope, receive, send)
