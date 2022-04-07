@@ -7,7 +7,7 @@ from strawberry_django_plus import gql
 
 from messages_social.api.input import CreateMessageInput
 from messages_social.api.types import MessagesType
-from messages_social.models import Messages
+from messages_social.models import Messages, Conversation
 from social_media_backend.api.utils import get_lazy_query_set_as_list
 from user.api.utils import get_current_user_from_info
 
@@ -23,10 +23,23 @@ class Mutation:
         if not is_friend:
             raise Exception("Receiver is not your friend")
 
+        conversation = None
+        if conv := await get_lazy_query_set_as_list(Conversation.objects.filter(participants__in=[user, is_friend[0]])):
+            conversation = conv
+        else:
+            new_conv = Conversation()
+            await sync_to_async(new_conv.save)()
+
+            await sync_to_async(new_conv.participants.add)(user)
+            await sync_to_async(new_conv.participants.add)(is_friend[0])
+
+            await sync_to_async(new_conv.save)()
+
+            conversation = new_conv
+
         # The type is only messages but I have to add MessagesType, because of the return of the function.
         messages: Union(Messages, MessagesType) = await sync_to_async(Messages.objects.create)(
-            receiver_id=data.receiver, sender=user,
-            content=data.content)
+            content=data.content, conversation_id=conversation[0].id)
 
         await info.context.broadcast.publish(channel=f"chatroom-{data.receiver}", message=messages.id)
 
