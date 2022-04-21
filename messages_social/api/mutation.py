@@ -39,8 +39,8 @@ class Mutation:
 
         # The type is only messages but I have to add MessagesType, because of the return of the function.
         messages: Union(Messages, MessagesType) = await sync_to_async(Messages.objects.create)(
-            content=data.content, conversation_id=conversation[0].id)
+            content=data.content, conversation_id=conversation[0].id, sender=user)
 
-        await info.context.broadcast.publish(channel=f"chatroom-{data.receiver}", message=messages.id)
+        await info.context.broadcast.publish(channel=f"chatroom-{conversation[0].id}", message=messages.id)
 
         return messages

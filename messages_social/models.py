@@ -10,6 +10,7 @@ class Messages(models.Model):
     received = models.BooleanField(default=False)
     seen = models.BooleanField(default=False)
     conversation = models.ForeignKey("Conversation", related_name="messages", on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, related_name="my_messages", on_delete=models.CASCADE)
 
 
 class Conversation(models.Model):

@@ -21,6 +21,7 @@ class MessagesType:
     content: gql.auto
     received: gql.auto
     seen: gql.auto
+    sender: UserType
 
     @gql.field
     async def conversation_id(self) -> str:
